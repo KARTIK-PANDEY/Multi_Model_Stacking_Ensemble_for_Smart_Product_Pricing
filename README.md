@@ -138,7 +138,8 @@ jupyter notebook Amazon_Ai_ML_Hackathon.
 ```
 
 
-👨‍💻 Author & Acknowledgment
+
+## 👨‍💻 Author & Acknowledgment
 
 Author: **Kartik Pandey**
 
