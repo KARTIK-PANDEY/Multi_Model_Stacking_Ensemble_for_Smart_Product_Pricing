@@ -133,4 +133,6 @@ cd Smart-Product-Pricing
 ```
 
 Explore the Code:-
-jupyter notebook Amazon_Ai_ML_Hackathon.ipynb
+```
+jupyter notebook Amazon_Ai_ML_Hackathon.
+```
