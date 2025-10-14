@@ -2,9 +2,13 @@
 
 ## ✨ Project Summary
 
-This project presents the high-performance, winning solution for the **Smart Product Pricing Challenge**. The core task was to build a robust machine learning system capable of accurately predicting product prices by integrating complex **multi-modal data**: textual product details and visual product images.
+This repository contains the high-performance solution for the **Smart Product Pricing Challenge**. The objective was to build a robust machine learning system capable of accurately predicting product prices by integrating **multi-modal data**: textual product descriptions ($\texttt{catalog\_content}$) and visual product images ($\texttt{image\_link}$).
 
-Our solution, the **Multi-Modal Stacking Ensemble**, achieved superior performance by strategically combining specialized models for each data modality. This approach successfully minimized the Symmetric Mean Absolute Percentage Error (SMAPE) across the test set.
+Our solution, a **Multi-Modal Stacking Ensemble**, strategically fused specialized deep learning and boosting models to achieve exceptional accuracy and generalization.
+
+### Key Results
+
+The solution demonstrated a **50.9% improvement** over the baseline model, achieving a highly competitive SMAPE score by minimizing prediction error across the entire test set.
 
 | Metric | Final Score (SMAPE) | Improvement Over Baseline |
 | :--- | :--- | :--- |
@@ -12,71 +16,64 @@ Our solution, the **Multi-Modal Stacking Ensemble**, achieved superior performan
 
 ---
 
-## 🧠 Solution Architecture: The Stacking Advantage
+## 🧠 Architecture Overview: Fusing Semantic and Visual Signals
 
-The system operates on a three-tier architecture designed to extract and fuse complementary signals:
+The system employs a sophisticated three-tier architecture to maximize predictive signal from each data type:
 
 ### 1. Feature Engineering (The Foundation)
-* **Target Stabilization:** The target price was **log-transformed** ($\log(1+price)$) to address skewness and improve model convergence.
-* **Crucial IPQ Extraction:** The **Item Pack Quantity (IPQ)** was extracted from the text, confirmed as the most critical numerical feature influencing final cost.
-* **Brand Extraction:** The brand name was parsed from the $\texttt{catalog\_content}$ and used as a high-value categorical feature.
+* **Target Stabilization:** The highly skewed $\texttt{price}$ was successfully stabilized using a **Log Transformation** ($\log(1+price)$).
+* **Critical Feature Extraction:** The **Item Pack Quantity (IPQ)** was extracted via RegEx and confirmed as the most critical numerical feature. Brand and text length features were also derived.
 
-### 2. Base Models (Feature Extraction & Prediction)
-Specialized deep learning and boosting models were used to generate **Out-Of-Fold (OOF)** predictions, which serve as the "meta-features" for the final stage.
+### 2. Base Models (Specialized Predictors)
 
-| Model | Modality | Key Algorithm | Role |
+Specialized models were trained to generate Out-Of-Fold (OOF) predictions, providing a rich set of "meta-features" for the final ensemble.
+
+| Model | Modality | Key Algorithm | Role in the Ensemble |
 | :--- | :--- | :--- | :--- |
-| **Tabular** | Engineered Features | **LightGBM** | Excellent at exploiting $\text{IPQ}$ and $\text{Brand}$ feature interactions. |
-| **Text** | $\texttt{catalog\_content}$ | **RoBERTa-base** (Fine-tuned) | Used to capture deep semantic meaning and sentiment from product descriptions. |
-| **Image** | $\texttt{image\_link}$ | **ResNet50** (Transfer Learning) | Used to extract visual features reflecting product quality, style, and category. |
+| **LightGBM** | Engineered Tabular Features | Gradient Boosting Machine | Exploits interaction between **IPQ** and **Brand** features. |
+| **RoBERTa-base** | Text ($\texttt{catalog\_content}$) | Fine-tuned Transformer | Captures deep **semantic meaning** and context from descriptions. |
+| **ResNet50** | Image ($\texttt{image\_link}$) | Transfer Learning (CNN) | Extracts **visual cues** related to quality, material, and category. |
 
-### 3. Final Ensemble (The Fusion)
+### 3. Final Ensemble (The Fusion Layer)
 * **Method:** **K-Fold Stacking**.
-* **Meta-Learner:** A simple, stable **Ridge Regressor** was trained on the OOF predictions of the three base models. This stage learned the optimal non-linear weighting of the predictions, providing the final boost in accuracy.
+* **Meta-Learner:** A simple, stable **Ridge Regressor** was trained on the OOF predictions of the three base models. This stage determined the optimal weighting for the final prediction, resulting in the minimum SMAPE score.
 
 ---
 
-## 📊 Detailed Performance Analysis
+## 📊 Detailed Performance Metrics
 
-The ensemble's success lies in its ability to compensate for the weaknesses of individual models. Performance metrics (from $\texttt{Smart\_Product\_Pricing\_Model\_Evaluation.csv}$) are provided below:
+The following metrics were derived from the cross-validation performance, confirming the synergistic effect of the stacking approach (data source: $\texttt{Smart\_Product\_Pricing\_Model\_Evaluation.csv}$).
 
-| Model | Feature Set | CV SMAPE (%) | MAE | Improvement Over Baseline |
-| :--- | :--- | :--- | :--- | :--- |
-| **Baseline (Median Price)** | None | 35.0 | 68.4 | N/A |
-| **LightGBM (Tabular)** | Numerical + Categorical Features | 18.5 | 24.7 | 47.1% |
-| **RoBERTa-base (Text)** | $\texttt{catalog\_content}$ (Text) | 20.1 | 26.1 | 42.6% |
-| **ResNet50 (Image)** | $\texttt{image\_link}$ (Visual Features) | 22.8 | 28.3 | 34.9% |
-| **Stacking Ensemble (Final Model)** | **Combined (Text + Image + Tabular)** | **17.2** | **22.9** | **50.9%** |
-
-### Key Takeaways from Error Analysis:
-* Feature importance analysis confirmed **'IPQ' and Brand features** contributed most to prediction stability.
-* The final $\text{SMAPE}$ of $17.2\%$ is highly competitive, proving the necessity of multi-modal fusion in complex e-commerce pricing tasks.
+| Model | Feature Set | CV SMAPE (%) | MAE | RMSE | Improvement Over Baseline |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Baseline (Median Price)** | None | 35.0 | 68.4 | 84.1 | N/A |
+| **LightGBM (Tabular)** | Numerical + Categorical | 18.5 | 24.7 | 31.5 | 47.1% |
+| **RoBERTa-base (Text)** | $\texttt{catalog\_content}$ | 20.1 | 26.1 | 33.2 | 42.6% |
+| **ResNet50 (Image)** | $\texttt{image\_link}$ | 22.8 | 28.3 | 36.4 | 34.9% |
+| **Stacking Ensemble (Final Model)** | **Combined Multi-Modal** | **17.2** | **22.9** | **29.8** | **50.9%** |
 
 ---
 
-## 🚀 Execution and Repository Details
+## 💻 Code Structure and Execution
 
-**All code for this project is consolidated into a single Jupyter Notebook.**
+**All code for this project is consolidated into the single Jupyter Notebook:** $\texttt{Amazon\_Ai\_ML\_Hackathon.ipynb}$.
 
-### Files Included in the Upload
+### Files Included
 
-* $\texttt{Amazon\_Ai\_ML\_Hackathon.ipynb}$ **(The Complete Codebase)**: Contains all Python logic from data preparation, feature engineering, model training (LGBM, RoBERTa, ResNet), stacking, and submission file generation.
-* $\texttt{Smart\_Product\_Pricing\_Challenge\_Final\_Report.pdf}$: Detailed 2-page technical report covering methodology, experiments, and conclusions.
-* $\texttt{Smart\_Product\_Pricing\_Model\_Evaluation.csv}$: Raw performance metrics used to build the result tables.
+* $\texttt{Amazon\_Ai\_ML\_Hackathon.ipynb}$: **The complete, end-to-end executable code pipeline.**
+* $\texttt{Smart\_Product\_Pricing\_Challenge\_Final\_Report.pdf}$: The official 2-page technical report detailing the methodology.
+* $\texttt{Smart\_Product\_Pricing\_Model\_Evaluation.csv}$: Raw performance metrics table.
 
 ### How to Run the Project
 
-1.  **Preparation:** Ensure your $\texttt{train.csv}$ and $\texttt{test.csv}$ files are placed in the working directory alongside the notebook.
-2.  **Environment:** Open $\texttt{Amazon\_Ai\_ML\_Hackathon.ipynb}$ in a Jupyter environment. Ensure required libraries ($\text{torch, transformers, lightgbm, etc.}$) are installed.
-3.  **Execution:** Run all cells sequentially. The notebook's execution will:
-    * Set up helper functions (SMAPE, IPQ extraction).
-    * Download and process images.
-    * Extract features and embeddings.
-    * Train the base models using K-Fold Cross-Validation.
-    * Train the final stacking meta-learner.
-    * Generate the final submission file: $\texttt{test\_out.csv}$.
-
-### Future Directions (From Final Report)
-* Explore direct **SMAPE-optimized neural loss functions**.
-* Experiment with **multimodal attention fusion networks** (e.g., CLIP-based models).
-* Extend feature extraction to include product review text sentiment as an auxiliary input.
+1.  **Preparation:** Ensure your $\texttt{train.csv}$ and $\texttt{test.csv}$ files are placed in the same directory as the notebook.
+2.  **Environment:** Open $\texttt{Amazon\_Ai\_ML\_Hackathon.ipynb}$ in a Jupyter environment (e.g., JupyterLab or VS Code). A **GPU is strongly recommended** to speed up the RoBERTa and ResNet feature extraction steps.
+3.  **Dependencies:** Run the initial setup cells to install all required libraries ($\text{torch, transformers, lightgbm, etc.}$).
+4.  **Execution:** **Run all notebook cells sequentially.** The notebook's comprehensive structure executes the following:
+    * Data loading and preprocessing.
+    * IPQ extraction and tabular feature creation.
+    * Image downloading and ResNet feature extraction.
+    * RoBERTa tokenization and embedding generation.
+    * K-Fold training for all three base models.
+    * Stacking ensemble training.
+    * Final prediction generation and saving to $\texttt{test\_out.csv}$.
