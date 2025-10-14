@@ -92,3 +92,15 @@ The stacked ensemble achieved the best overall performance.
 
 ## 📁 Repository Structure
 
+📦 Smart-Product-Pricing
+├── 📜 README.md
+├── 📘 Smart_Product_Pricing_Challenge_Final_Report.pdf
+├── 📊 Smart_Product_Pricing_Model_Evaluation.csv
+├── 💻 Amazon_Ai_ML_Hackathon.ipynb
+├── 🖼️ images/
+│ ├── sample_1.jpg
+│ └── sample_2.jpg
+└── 📂 data/
+├── train.csv
+├── test.csv
+└── submission.csv
