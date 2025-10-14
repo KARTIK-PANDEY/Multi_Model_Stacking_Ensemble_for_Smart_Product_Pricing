@@ -120,6 +120,15 @@ This ensemble effectively balanced the strengths of each model, improving robust
 | **Loss Function** | SMAPE |
 | **Optimizer** | AdamW (for RoBERTa, ResNet50), Default (for LightGBM) |
 
+
+
 ---
+
+## ⚙️ How to Run the Project
+
+### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/your-username/Smart-Product-Pricing.git
+cd Smart-Product-Pricing
 
 
