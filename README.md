@@ -92,34 +92,34 @@ This ensemble effectively balanced the strengths of each model, improving robust
 
 ---
 
-## 🧱 System Architecture
 
-  +----------------------+
-    |  Product Data Input  |
-    +----------+-----------+
-               |
- +-------------+-------------+
- |                           |
-+----v----+ +-----v------+
-| Text | | Images |
-| (RoBERTa)| | (ResNet50) |
-+----+----+ +-----+------+
-| |
-| |
-+-------------+-------------+
-|
-+----------v-----------+
-| Tabular Features |
-| (LightGBM) |
-+----------+-----------+
-|
-v
-+----------------------+
-| Stacking Ensemble |
-| (Ridge Regression) |
-+----------+-----------+
-|
-v
-+----------------------+
-| Final Price Output |
-+----------------------+
+---
+
+## 📊 Model Evaluation
+
+| Model | Feature Type | CV SMAPE (%) | MAE | RMSE | Improvement Over Baseline |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Baseline (Median Price)** | None | 35.0 | 68.4 | 84.1 | — |
+| **LightGBM** | Tabular | 18.5 | 24.7 | 31.5 | 47.1% |
+| **RoBERTa-base** | Text | 20.1 | 26.1 | 33.2 | 42.6% |
+| **ResNet50** | Image | 22.8 | 28.3 | 36.4 | 34.9% |
+| **Final Stacking Ensemble** | Multi-Modal | **17.2** | **22.9** | **29.8** | **50.9%** |
+
+📄 *Detailed performance metrics are available in:*  
+[`Smart_Product_Pricing_Model_Evaluation.csv`](./Smart_Product_Pricing_Model_Evaluation.csv)
+
+---
+
+## 🧮 Experimental Setup
+
+| Component | Description |
+| :--- | :--- |
+| **Hardware** | NVIDIA T4 GPU, 16GB RAM |
+| **Frameworks** | PyTorch, Transformers, LightGBM, Scikit-learn |
+| **Validation Strategy** | 5-Fold Stratified Cross Validation |
+| **Loss Function** | SMAPE |
+| **Optimizer** | AdamW (for RoBERTa, ResNet50), Default (for LightGBM) |
+
+---
+
+
