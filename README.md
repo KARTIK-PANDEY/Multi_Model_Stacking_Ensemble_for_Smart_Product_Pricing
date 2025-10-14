@@ -94,3 +94,32 @@ This ensemble effectively balanced the strengths of each model, improving robust
 
 ## 🧱 System Architecture
 
+  +----------------------+
+    |  Product Data Input  |
+    +----------+-----------+
+               |
+ +-------------+-------------+
+ |                           |
++----v----+ +-----v------+
+| Text | | Images |
+| (RoBERTa)| | (ResNet50) |
++----+----+ +-----+------+
+| |
+| |
++-------------+-------------+
+|
++----------v-----------+
+| Tabular Features |
+| (LightGBM) |
++----------+-----------+
+|
+v
++----------------------+
+| Stacking Ensemble |
+| (Ridge Regression) |
++----------+-----------+
+|
+v
++----------------------+
+| Final Price Output |
++----------------------+
