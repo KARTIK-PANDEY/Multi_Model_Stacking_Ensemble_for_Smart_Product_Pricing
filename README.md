@@ -136,3 +136,10 @@ Explore the Code:-
 ```
 jupyter notebook Amazon_Ai_ML_Hackathon.
 ```
+
+
+👨‍💻 Author & Acknowledgment
+
+Author: **Kartik Pandey**
+
+Hackathon: Amazon AI/ML Challenge 2025 — Smart Product Pricing Problem
