@@ -1,0 +1,6 @@
+Model,Feature_Set,Cross_Validation_SMAPE(%),MAE,RMSE,Improvement_Over_Baseline(%)
+Baseline (Median Price),None,35.0,68.4,84.1,N/A
+LightGBM (Tabular),Numerical + Categorical Features,18.5,24.7,31.5,47.1%
+RoBERTa-base (Text),catalog_content (Text),20.1,26.1,33.2,42.6%
+ResNet50 (Image),image_link (Visual Features),22.8,28.3,36.4,34.9%
+Stacking Ensemble (Final Model),Combined (Text + Image + Tabular),17.2,22.9,29.8,50.9%
